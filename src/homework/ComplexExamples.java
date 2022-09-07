@@ -121,7 +121,7 @@ public class ComplexExamples {
             [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
          */
 
-
+        // Выводит пару скобках, которая дает в сумме указанную сумму.
         BiFunction<List<Integer>, Integer, String> getPair = (integers, integer) -> {
             for (int i = 0; i < integers.size(); i++) {
                 for (int j = 0; j < integers.size() - i; j++) {
