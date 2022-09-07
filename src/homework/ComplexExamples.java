@@ -1,8 +1,9 @@
 package homework;
 
-import java.util.*;
-import java.util.function.BiConsumer;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.stream.Stream;
 
 public class ComplexExamples {
 
@@ -120,6 +121,22 @@ public class ComplexExamples {
             [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
          */
 
+
+        BiFunction<List<Integer>, Integer, String> getPair = (integers, integer) -> {
+            for (int i = 0; i < integers.size(); i++) {
+                for (int j = 0; j < integers.size() - i; j++) {
+                    Integer sum = integers.get(i) + integers.get(j);
+                    if (sum.equals(integer)) {
+                        return String.format("[%d, %d]", integers.get(i), integers.get(j));
+                    }
+                }
+            }
+            return "[]";
+        };
+
+        System.out.println();
+        System.out.format("Task 2: [3, 4, 2, 7], 10 -> %s", getPair.apply(Stream.of(3, 4, 2, 7).toList(), 10));
+        System.out.println();
 
 
         /*
