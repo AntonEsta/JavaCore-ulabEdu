@@ -114,6 +114,27 @@ public class ComplexExamples {
                 Value:1
          */
 
+        // Печать результатов
+        BiConsumer<String, List<Person>> printMapCounts = (key, personList) -> {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("Key: ")
+                    .append(key)
+                    .append("\n")
+                    .append("Value: ")
+                    .append(personList.size());
+            System.out.println(stringBuilder);
+        };
+
+
+        // Убрать дубликаты, отсортировать по идентификатору, сгруппировать по имени
+        Map<String, List<Person>> map = Arrays.stream(RAW_DATA)
+                .filter(Objects::nonNull)
+                .distinct()
+                .sorted(Comparator.comparingInt(Person::getId))
+                .collect(Collectors.groupingBy(Person::getName));
+
+        map.forEach(printMapCounts);
+
         /*
         Task2
 
