@@ -2,7 +2,9 @@ package homework;
 
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ComplexExamples {
 
@@ -95,7 +97,7 @@ public class ComplexExamples {
 
         System.out.println();
         System.out.println("**************************************************");
-        System.out.println();
+        System.out.println("Task #1");
         System.out.println("Duplicate filtered, grouped by name, sorted by name and id:");
         System.out.println();
 
@@ -137,7 +139,33 @@ public class ComplexExamples {
             [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
          */
 
+        System.out.println();
+        System.out.println("**************************************************");
+        System.out.println("Task #2");
+        System.out.println("[3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10");
+        System.out.println();
 
+        // Возвращяет первую пару удовлетворяющую
+        BiFunction<List<Integer>, Integer, List<Integer>> getPair = (integers, integer) -> {
+            List<Integer> list = new ArrayList<>();
+            for (int i = 0; i < integers.size(); i++) {
+                for (int j = 0; j < integers.size() - i; j++) {
+                    Integer sum = integers.get(i) + integers.get(j);
+                    if (sum.equals(integer)) {
+                        list.add(integers.get(i));
+                        list.add(integers.get(j));
+                        return list;
+                    }
+                }
+            }
+            return list;
+        };
+
+        List<Integer> sourceList = Stream.of(3, 4, 2, 7).toList();
+        Integer condition = 10;
+
+        System.out.format("Source: %s, %s -> Result: %s",
+                sourceList, condition, getPair.apply(sourceList, condition));
 
         /*
         Task3
