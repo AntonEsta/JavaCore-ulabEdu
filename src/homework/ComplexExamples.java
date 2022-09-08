@@ -177,5 +177,50 @@ public class ComplexExamples {
                     fuzzySearch("cwheeel", "cartwheel"); // false
                     fuzzySearch("lw", "cartwheel"); // false
          */
+
+        System.out.println();
+        System.out.println("**************************************************");
+        System.out.println("Task #3");
+        System.out.println("Реализовать функцию нечеткого поиска");
+        System.out.println();
+
+        // Реализация функции нечеткого поиска
+        BiFunction<String, String, Boolean> fuzzySearch = (s, t) -> {
+            int index = 0;
+            int count = 0;
+            for (int i = 0; i < s.length(); i++) {
+                boolean isFound = false;
+                for (int j = index; j < t.length(); j++) {
+                    if (s.charAt(i) == t.charAt(j)) {
+                        index = j+1;
+                        count++;
+                        isFound = true;
+                        break;
+                    }
+                }
+                if (!isFound) return false;
+            }
+            return count == s.length();
+        };
+
+        // Проверка функции и вывод результатов
+        System.out.println(fuzzySearch.apply("car", "ca6$$#_rtwheel"));
+        System.out.println(fuzzySearch.apply("cwhl", "cartwheel"));
+        System.out.println(fuzzySearch.apply("cwhee", "cartwheel"));
+        System.out.println(fuzzySearch.apply("cartwheel", "cartwheel"));
+        System.out.println(fuzzySearch.apply("cwheeel", "cartwheel"));
+        System.out.println(fuzzySearch.apply("lw", "cartwheel"));
+
+        String searchStr = "1. При число. отдельного репозитория ()";
+
+        String sourceStr = """
+                1. При выполнении ДЗ стримами пользоваться не обязательно. Лаконичность и красота кода при этом важны.
+                2. Задача №2 - на вход подается массив и число. Нужно вывести первую пару чисел, которые дают в сумме число.
+                3. ДЗ выкладывать на гитхаб в виде отдельного репозитория (можно просто ссылку на репозиторий, можно на МР)""";
+
+        boolean fuzzySearchResult = fuzzySearch.apply(searchStr, sourceStr);
+        assert !fuzzySearchResult : "fuzzySearch() not correctly!";
+        System.out.println(fuzzySearchResult);
+
     }
 }
