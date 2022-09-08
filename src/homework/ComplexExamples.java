@@ -114,6 +114,23 @@ public class ComplexExamples {
                 Value:1
          */
 
+        // Выводит результаты задания #1.
+        BiConsumer<String, List<Person>> printResult = (key, personList) -> {
+            System.out.printf("Key: %s%n", key);
+            System.out.printf("Value: %s%n", personList.size());
+        };
+
+
+        // Убраем дубликаты, отсортируем по идентификатору, группируем по имени
+        Map<String, List<Person>> p = Arrays.stream(RAW_DATA)
+                .filter(Objects::nonNull)
+                .distinct()
+                .sorted(Comparator.comparingInt(Person::getId))
+                .collect(Collectors.groupingBy(Person::getName));
+
+        // Выводим результаты
+        p.forEach(printResult);
+
         /*
         Task2
 
