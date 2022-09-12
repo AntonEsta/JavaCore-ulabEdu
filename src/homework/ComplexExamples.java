@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class ComplexExamples {
 
@@ -116,22 +116,13 @@ public class ComplexExamples {
                 Value:1
          */
 
-        // Выводит результаты задания #1.
-        BiConsumer<String, List<Person>> printResult = (key, personList) -> {
-            System.out.printf("Key: %s%n", key);
-            System.out.printf("Value: %s%n", personList.size());
-        };
-
-
         // Убраем дубликаты, отсортируем по идентификатору, группируем по имени
-        Map<String, List<Person>> p = Arrays.stream(RAW_DATA)
+        Arrays.stream(RAW_DATA)
                 .filter(Objects::nonNull)
                 .distinct()
                 .sorted(Comparator.comparingInt(Person::getId))
-                .collect(Collectors.groupingBy(Person::getName));
-
-        // Выводим результаты
-        p.forEach(printResult);
+                .collect(Collectors.groupingBy(Person::getName))
+                .forEach((s, personList) -> System.out.printf("Key: %s%nValue: %s%n", s, personList.size()));
 
         /*
         Task2
@@ -145,27 +136,25 @@ public class ComplexExamples {
         System.out.println("[3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10");
         System.out.println();
 
-        // Возвращяет первую пару удовлетворяющую
-        BiFunction<List<Integer>, Integer, List<Integer>> getPair = (integers, integer) -> {
-            List<Integer> list = new ArrayList<>();
-            for (int i = 0; i < integers.size(); i++) {
-                for (int j = 0; j < integers.size() - i; j++) {
-                    Integer sum = integers.get(i) + integers.get(j);
-                    if (sum.equals(integer)) {
-                        list.add(integers.get(i));
-                        list.add(integers.get(j));
-                        return list;
-                    }
-                }
-            }
-            return list;
+        // Выводит первую пару удовлетворяющую условию
+        BiConsumer<List<Integer>, Integer> showFirstPairCondition = (list, i) -> {
+            Set<List<Integer>> pairs = new LinkedHashSet<>();
+            IntStream.range(0, list.size()).forEach(j -> list.stream().skip(j).forEachOrdered(v -> {
+                        if (v + list.get(j) == i) {
+                            List<Integer> aList = new LinkedList<>();
+                            aList.add(list.get(j));
+                            aList.add(v);
+                            pairs.add(aList);
+                        }
+                    }));
+            System.out.println(pairs.stream().findFirst().orElseGet(ArrayList::new));
         };
 
-        List<Integer> sourceList = Stream.of(3, 4, 2, 7).toList();
-        Integer condition = 10;
+        int[] integers = new int[]{3,4,2,7};
+        int condition = 10;
 
-        System.out.format("Source: %s, %s -> Result: %s",
-                sourceList, condition, getPair.apply(sourceList, condition));
+        System.out.format("Source: %s, %s -> Result: ", Arrays.toString(integers), condition);
+        showFirstPairCondition.accept(Arrays.stream(integers).boxed().toList(), condition);
 
         /*
         Task3
@@ -204,23 +193,19 @@ public class ComplexExamples {
         };
 
         // Проверка функции и вывод результатов
-        System.out.println(fuzzySearch.apply("car", "ca6$$#_rtwheel"));
-        System.out.println(fuzzySearch.apply("cwhl", "cartwheel"));
-        System.out.println(fuzzySearch.apply("cwhee", "cartwheel"));
-        System.out.println(fuzzySearch.apply("cartwheel", "cartwheel"));
-        System.out.println(fuzzySearch.apply("cwheeel", "cartwheel"));
-        System.out.println(fuzzySearch.apply("lw", "cartwheel"));
-
-        String searchStr = "1. При число. отдельного репозитория ()";
-
-        String sourceStr = """
+        Map<String, String> map = new LinkedHashMap<>();
+        map.put("car", "ca6$$#_rtwheel");
+        map.put("cwhl", "cartwheel");
+        map.put("cwhee", "cartwheel");
+        map.put("cartwheel", "cartwheel");
+        map.put("cwheeel", "cartwheel");
+        map.put("lw", "cartwheel");
+        map.put("1. При число. отдельного репозитория ()", """
                 1. При выполнении ДЗ стримами пользоваться не обязательно. Лаконичность и красота кода при этом важны.
                 2. Задача №2 - на вход подается массив и число. Нужно вывести первую пару чисел, которые дают в сумме число.
-                3. ДЗ выкладывать на гитхаб в виде отдельного репозитория (можно просто ссылку на репозиторий, можно на МР)""";
+                3. ДЗ выкладывать на гитхаб в виде отдельного репозитория (можно просто ссылку на репозиторий, можно на МР)""");
 
-        boolean fuzzySearchResult = fuzzySearch.apply(searchStr, sourceStr);
-        assert !fuzzySearchResult : "fuzzySearch() not correctly!";
-        System.out.println(fuzzySearchResult);
+        map.forEach((s, s2) -> System.out.format("%n\"%s\" -> \"%s\": %n fuzzySearch() > %s%n", s, s2, fuzzySearch.apply(s, s2)));
 
     }
 }
